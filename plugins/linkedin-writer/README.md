@@ -40,9 +40,11 @@ Run `/reload-plugins` inside Claude Code after editing any plugin file.
 
 ## First-run flow
 
+You can start from either end — invoke `linkedin-writer` directly and it will run the missing setup steps inline before writing your first post, or invoke `setup` standalone to establish the brand context and post types up front. The standalone path is useful when you know you'll create several post types in a row.
+
 ### 1. Brand setup
 
-Invoke the setup agent. On the first run it detects that no brand context exists and starts the brand-setup phase.
+Invoke the `setup` agent. On the first run it detects that no brand context exists and starts the brand-setup phase.
 
 It will ask if you have any existing materials — tone-of-voice docs, brand guidelines, past posts, a website URL, a LinkedIn profile. Paste text, drop file paths, or share URLs. It reads them, summarises what it inferred, and asks narrow follow-up questions only for gaps.
 
@@ -69,8 +71,8 @@ Invoke the `linkedin-writer` agent. Give it a one- or two-sentence brief. It pic
 
 ## Everyday flow
 
-- Most days: `linkedin-writer` with a brief.
-- New type of post (rare): `setup` to create a new preset first, then `linkedin-writer`.
+- Most days: `linkedin-writer` with a brief. On first run it detects missing brand context or post types and runs the relevant setup phase inline.
+- New type of post (rare): `setup` to create a new preset standalone, then `linkedin-writer`.
 - Tweak an existing type (add examples, switch framework, rename): run `setup` and tell it you want to edit an existing type — it will preserve the example corpus.
 - Brand evolves: delete or edit `brand-context/SKILL.md` and `tone-format-guardrails/SKILL.md` and re-run `setup`.
 

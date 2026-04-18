@@ -6,7 +6,7 @@ A small Claude Code plugin marketplace for content-agency workflows. Install onc
 
 | Plugin | What it does |
 |--------|--------------|
-| [`linkedin-writer`](plugins/linkedin-writer/) | Write on-brand LinkedIn posts from a short brief. Learns your voice from materials you already have. No API keys, no external services. |
+| [`linkedin-writer`](plugins/linkedin-writer/) | Write on-brand LinkedIn posts from a short brief. Learns your voice from materials you already have. Runs in Claude Cowork and local Claude Code; state persists across sessions. No API keys. |
 
 ## Install
 

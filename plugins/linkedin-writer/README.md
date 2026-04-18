@@ -4,9 +4,11 @@ A Claude Code plugin for writing on-brand LinkedIn posts. Give it a one- or two-
 
 **Who it's for.** Founders, content marketers, and small agencies who already have a brand voice and want to stop fighting generic AI output. The plugin learns your brand from materials you already have — a tone-of-voice doc, past posts, your website — and reuses it every time.
 
-**What makes it different.** No API keys, no database, no external services. Everything runs inside Claude Code and lives as plain markdown in the plugin folder. Edit any file by hand, commit it to a repo, share it with a teammate.
+**What makes it different.** No API keys, no database, no external services. Everything runs inside Claude Code or Claude Cowork, and state lives as plain markdown in the plugin's persistent data directory — surviving across sessions and plugin updates.
 
 **Language.** The plugin is brand-agnostic. It works in French, English, or any other language your brand writes in — set once during setup.
+
+**Where it runs.** Designed for [Claude Cowork](https://support.claude.com/en/articles/13837440-use-plugins-in-claude-cowork). Also works in local Claude Code (state goes to `~/.claude/plugins/data/linkedin-writer-comagency-plugins/`).
 
 ## Install
 
@@ -59,24 +61,26 @@ You type a brief. It picks the matching post type, asks for any angle or data yo
 
 ## Under the hood
 
-Two agents, three skill folders:
+Two agents ship with the plugin. All user state — brand, tone rules, post types — is written to the plugin's persistent data directory (`${CLAUDE_PLUGIN_DATA}`), which survives sessions and plugin updates.
 
 ```
-linkedin-writer/
-├── agents/
-│   ├── setup.md            # Conversational setup: brand + post types
-│   └── linkedin-writer.md  # Writes posts; runs setup inline if missing
-└── skills/                 # Populated by setup — not in the repo
-    ├── brand-context/          # Company, audience, language, pillars
-    ├── tone-format-guardrails/ # Tone, format, quality rules + priority
-    └── post-types/             # One subfolder per reusable preset
+Plugin install directory (${CLAUDE_PLUGIN_ROOT}, read-only):
+  linkedin-writer/
+  └── agents/
+      ├── setup.md            # Conversational setup: brand + post types
+      └── linkedin-writer.md  # Writes posts; runs setup inline if missing
+
+Persistent data directory (${CLAUDE_PLUGIN_DATA}, populated by setup):
+  ├── brand-context/SKILL.md           # Company, audience, language, pillars
+  ├── tone-format-guardrails/SKILL.md  # Tone, format, quality rules + priority
+  └── post-types/<slug>/SKILL.md       # One file per reusable preset
 ```
 
-Everything is plain markdown. The agents read the skill files at session start.
+On a local install, the data directory resolves to `~/.claude/plugins/data/linkedin-writer-comagency-plugins/`. In Claude Cowork, Anthropic manages the path. Either way, every file is plain markdown — inspect or edit by hand at any time.
 
 ## Troubleshooting
 
-- **"No brand context yet" even though I ran setup:** check that `skills/brand-context/SKILL.md` exists inside the plugin directory. If you installed via the marketplace, the plugin lives under your Claude Code plugins directory; find it with `/plugin list`.
+- **"No brand context yet" even though I ran setup:** check that `brand-context/SKILL.md` exists in the plugin's persistent data directory. On local Claude Code that's `~/.claude/plugins/data/linkedin-writer-comagency-plugins/`. In Cowork, ask the writer agent to `ls ${CLAUDE_PLUGIN_DATA}` to confirm.
 - **LinkedIn URL didn't work during setup:** LinkedIn blocks unauthenticated fetches. Paste the post text instead.
 - **Post ignored a format rule:** the priority hierarchy puts Tone above Format on purpose. If Tone examples in your config show 200-word posts, the writer will lean toward 200 words even if format rules say 150. Tighten the tone examples or loosen the format rule.
 

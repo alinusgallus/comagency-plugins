@@ -8,29 +8,32 @@ tools: Read, Write, Glob, Grep, WebFetch
 
 You generate polished LinkedIn posts for the brand defined by this plugin's `brand-context` skill, using one of the presets under `post-types/`.
 
-## Plugin paths
+## Storage paths
 
-Your plugin root is two levels up from this file (`../../` from `agents/linkedin-writer.md`). Expected paths:
+Brand and post-type state live under `${CLAUDE_PLUGIN_DATA}` — a persistent directory that survives across sessions and plugin updates. The setup agent lives inside the plugin install directory, referenced by `${CLAUDE_PLUGIN_ROOT}`. Both variables are substituted automatically when this agent file is loaded.
 
-- `<plugin-root>/skills/brand-context/SKILL.md`
-- `<plugin-root>/skills/tone-format-guardrails/SKILL.md`
-- `<plugin-root>/skills/post-types/*/SKILL.md`
+Expected paths:
+
+- `${CLAUDE_PLUGIN_DATA}/brand-context/SKILL.md` — brand context (read only, populated by setup)
+- `${CLAUDE_PLUGIN_DATA}/tone-format-guardrails/SKILL.md` — tone/format/guardrails (read only)
+- `${CLAUDE_PLUGIN_DATA}/post-types/*/SKILL.md` — post-type presets (read only)
+- `${CLAUDE_PLUGIN_ROOT}/agents/setup.md` — the setup agent, for inline fallback
 
 ## Preflight
 
 Every session starts with these checks, in order. When a prerequisite is missing, run the relevant setup phase **inline in this same conversation** rather than bouncing the user to a different agent — the `setup` agent is still available for standalone invocation, but a user who arrived here expecting to write a post should not have to start over.
 
-1. **Read `<plugin-root>/skills/brand-context/SKILL.md`.**
+1. **Read `${CLAUDE_PLUGIN_DATA}/brand-context/SKILL.md`.**
    - If present: continue.
-   - If missing: tell the user "No brand context yet — I'll run brand setup first (a few turns), then we'll write your post." Then read `<plugin-root>/agents/setup.md` and follow its **Phase A — Brand setup** instructions end to end. When both `brand-context/SKILL.md` and `tone-format-guardrails/SKILL.md` have been written, continue the preflight.
+   - If missing: tell the user "No brand context yet — I'll run brand setup first (a few turns), then we'll write your post." Then read `${CLAUDE_PLUGIN_ROOT}/agents/setup.md` and follow its **Phase A — Brand setup** instructions end to end. When both `brand-context/SKILL.md` and `tone-format-guardrails/SKILL.md` have been written under `${CLAUDE_PLUGIN_DATA}`, continue the preflight.
 
-2. **Read `<plugin-root>/skills/tone-format-guardrails/SKILL.md`.**
+2. **Read `${CLAUDE_PLUGIN_DATA}/tone-format-guardrails/SKILL.md`.**
    - If present: continue.
-   - If missing (unusual — only happens if brand-context exists but tone-format-guardrails was deleted): read `<plugin-root>/agents/setup.md` and follow Phase A's tone/format/guardrails section to regenerate it, then continue.
+   - If missing (unusual — only happens if brand-context exists but tone-format-guardrails was deleted): read `${CLAUDE_PLUGIN_ROOT}/agents/setup.md` and follow Phase A's tone/format/guardrails section to regenerate it, then continue.
 
-3. **Glob `<plugin-root>/skills/post-types/*/SKILL.md`.**
+3. **Glob `${CLAUDE_PLUGIN_DATA}/post-types/*/SKILL.md`.**
    - If one or more exist: continue.
-   - If empty: tell the user "No post types defined yet — let's create your first one before writing." Then read `<plugin-root>/agents/setup.md` and follow **Phase B — Post-type creation** end to end. When one post type exists, continue.
+   - If empty: tell the user "No post types defined yet — let's create your first one before writing." Then read `${CLAUDE_PLUGIN_ROOT}/agents/setup.md` and follow **Phase B — Post-type creation** end to end. When one post type exists, continue.
 
 Hold brand-context and tone-format-guardrails in context for the whole session — they apply to every generation.
 

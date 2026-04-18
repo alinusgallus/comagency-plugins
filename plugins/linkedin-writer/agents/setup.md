@@ -10,19 +10,23 @@ You help the user set up the LinkedIn Writer plugin. You produce `SKILL.md` file
 
 You operate in one of three phases:
 
-- **Phase A — Brand setup**: runs when the plugin has no brand context yet (i.e. `skills/brand-context/SKILL.md` is missing inside this plugin's directory).
+- **Phase A — Brand setup**: runs when the plugin has no brand context yet (i.e. `${CLAUDE_PLUGIN_DATA}/brand-context/SKILL.md` is missing).
 - **Phase B — Post-type creation**: runs when brand context exists. Creates one new post-type preset per run.
 - **Phase C — Post-type edit**: runs when the user asks to update or edit an existing post type. Modifies one existing `post-types/<slug>/SKILL.md` in place, preserving the example corpus.
 
-At the start of every session: Glob `<plugin-root>/skills/brand-context/SKILL.md` to detect Phase A vs. B/C. If brand context exists, ask the user whether they want to **create a new post type** (Phase B) or **edit an existing one** (Phase C). If they want to edit, list the existing post types first so they can pick.
+At the start of every session: Glob `${CLAUDE_PLUGIN_DATA}/brand-context/SKILL.md` to detect Phase A vs. B/C. If brand context exists, ask the user whether they want to **create a new post type** (Phase B) or **edit an existing one** (Phase C). If they want to edit, list the existing post types first so they can pick.
 
-## Plugin paths
+## Storage paths
 
-All files you create live inside the plugin directory. Resolve it relative to your own location: the plugin root is two levels up from this agent file (`../../` from `agents/setup.md`). Expected paths:
+All files you create live under the plugin's **persistent data directory**, referenced by the `${CLAUDE_PLUGIN_DATA}` environment variable. This path is substituted automatically when this agent file is loaded; treat it as a literal path when calling Read, Write, and Glob. The directory is created on first write and persists across sessions and plugin updates.
 
-- `<plugin-root>/skills/brand-context/SKILL.md`
-- `<plugin-root>/skills/tone-format-guardrails/SKILL.md`
-- `<plugin-root>/skills/post-types/<slug>/SKILL.md`
+Expected paths:
+
+- `${CLAUDE_PLUGIN_DATA}/brand-context/SKILL.md`
+- `${CLAUDE_PLUGIN_DATA}/tone-format-guardrails/SKILL.md`
+- `${CLAUDE_PLUGIN_DATA}/post-types/<slug>/SKILL.md`
+
+**Do not** write to `${CLAUDE_PLUGIN_ROOT}` (the plugin install directory) — files written there do not survive plugin updates.
 
 ## Resource-first principle
 
@@ -44,7 +48,7 @@ If the user has no materials for a given section, offer a sensible default and a
 
 ## Phase A — Brand setup
 
-Run this when `skills/brand-context/SKILL.md` does not exist.
+Run this when `${CLAUDE_PLUGIN_DATA}/brand-context/SKILL.md` does not exist.
 
 ### Step 1 — Ingest resources
 
@@ -86,7 +90,7 @@ From the resources (and augmented by targeted questions for gaps), establish:
 
 After confirming with the user, write both files in a single step.
 
-**File 1 — `<plugin-root>/skills/brand-context/SKILL.md`:**
+**File 1 — `${CLAUDE_PLUGIN_DATA}/brand-context/SKILL.md`:**
 
 ```markdown
 ---
@@ -117,7 +121,7 @@ Tone: <tone>
 ...
 ```
 
-**File 2 — `<plugin-root>/skills/tone-format-guardrails/SKILL.md`:**
+**File 2 — `${CLAUDE_PLUGIN_DATA}/tone-format-guardrails/SKILL.md`:**
 
 Order the sections **lowest priority first, highest priority last**, followed by the explicit priority-hierarchy block. Putting the highest-priority rules last leverages recency bias — the model weights them more heavily at generation time.
 
@@ -156,7 +160,7 @@ After writing, show the user the paths of both files and invite them to run the 
 
 ## Phase B — Post-type setup
 
-Run this when `<plugin-root>/skills/brand-context/SKILL.md` exists. Each run creates one new post-type preset.
+Run this when `${CLAUDE_PLUGIN_DATA}/brand-context/SKILL.md` exists. Each run creates one new post-type preset.
 
 ### Step 1 — Ingest examples
 
@@ -199,7 +203,7 @@ Slugify the name: lowercase ASCII, spaces → hyphens, strip accents and punctua
 
 Accent map: `à â ä` → `a`, `é è ê ë` → `e`, `î ï` → `i`, `ô ö` → `o`, `ù û ü` → `u`, `ç` → `c`, `œ` → `oe`, `æ` → `ae`. Drop any remaining non-`[a-z0-9-]` characters and collapse runs of hyphens.
 
-Write `<plugin-root>/skills/post-types/<slug>/SKILL.md`:
+Write `${CLAUDE_PLUGIN_DATA}/post-types/<slug>/SKILL.md`:
 
 ```markdown
 ---
@@ -249,7 +253,7 @@ Run this when brand context exists and the user asked to edit (not create) a pos
 
 ### Step 1 — Pick the target
 
-Glob `<plugin-root>/skills/post-types/*/SKILL.md` and show the user the list with each type's name and one-line description (from the frontmatter). Ask which one they want to edit.
+Glob `${CLAUDE_PLUGIN_DATA}/post-types/*/SKILL.md` and show the user the list with each type's name and one-line description (from the frontmatter). Ask which one they want to edit.
 
 If there are no existing types, tell the user and offer to switch to Phase B to create one.
 

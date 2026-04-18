@@ -1,50 +1,33 @@
 # ComAgency Plugins
 
-A Claude Code plugin marketplace for content-agency workflows.
+A small Claude Code plugin marketplace for content-agency workflows. Install once, use from any project.
 
-## Plugins
+## Available plugins
 
-| Plugin | Description |
-|--------|-------------|
-| [`linkedin-writer`](plugins/linkedin-writer/) | Conversational LinkedIn post generator. The `setup` agent establishes brand context and reusable post-type presets from your own materials; the `linkedin-writer` agent produces on-brand posts from a short brief. |
+| Plugin | What it does |
+|--------|--------------|
+| [`linkedin-writer`](plugins/linkedin-writer/) | Write on-brand LinkedIn posts from a short brief. Learns your voice from materials you already have. No API keys, no external services. |
 
 ## Install
 
-Once this repo is pushed to GitHub, anyone with access can add the marketplace and install a plugin in two commands inside Claude Code:
+Inside Claude Code:
 
 ```
-/plugin marketplace add <owner>/comagency-plugins
+/plugin marketplace add alinusgallus/comagency-plugins
 /plugin install linkedin-writer@comagency-plugins
 ```
 
-Replace `<owner>` with the GitHub owner/organisation you push this repo under. For a private repo, the user needs `gh auth login` or SSH keys configured for that repo.
+See each plugin's own README for usage — the `linkedin-writer` README has a full walkthrough of the first-run flow.
 
-## Local install (before pushing)
-
-From any directory:
-
-```
-/plugin marketplace add <path-to>/comagency-plugins
-/plugin install linkedin-writer@comagency-plugins
-```
-
-Or mount the plugin directly without going through the marketplace layer:
-
-```bash
-claude --plugin-dir <path-to>/comagency-plugins/plugins/linkedin-writer
-```
-
-## Update a plugin
+## Updates
 
 ```
 /plugin marketplace update comagency-plugins
 ```
 
-Plugins declare their version in `plugins/<name>/.claude-plugin/plugin.json`. Bump that field and push before users run the update command.
-
 ## Auto-install for a team project
 
-In any project that should ship with these plugins, add to `.claude/settings.json`:
+If every teammate on a project should have a plugin installed, add it to the project's `.claude/settings.json`:
 
 ```json
 {
@@ -52,7 +35,7 @@ In any project that should ship with these plugins, add to `.claude/settings.jso
     "comagency-plugins": {
       "source": {
         "source": "github",
-        "repo": "<owner>/comagency-plugins"
+        "repo": "alinusgallus/comagency-plugins"
       }
     }
   },
@@ -64,23 +47,40 @@ In any project that should ship with these plugins, add to `.claude/settings.jso
 
 Teammates who trust the project directory get prompted to install on first launch.
 
-## Repository layout
+## Local development
+
+To iterate on a plugin without pushing:
 
 ```
-comagency-plugins/
-├── .claude-plugin/
-│   └── marketplace.json    # Marketplace manifest — lists published plugins
-├── plugins/
-│   └── linkedin-writer/    # One directory per plugin
-│       ├── .claude-plugin/plugin.json
-│       ├── agents/
-│       └── README.md
-└── README.md
+/plugin marketplace add /path/to/comagency-plugins
+/plugin install linkedin-writer@comagency-plugins
 ```
+
+Or mount a plugin directly:
+
+```bash
+claude --plugin-dir /path/to/comagency-plugins/plugins/linkedin-writer
+```
+
+Run `/reload-plugins` inside Claude Code after editing plugin files.
 
 ## Adding a new plugin
 
 1. Create `plugins/<name>/` with its own `.claude-plugin/plugin.json` and contents (agents, skills, hooks, MCP servers).
 2. Add an entry to the `plugins` array in `.claude-plugin/marketplace.json`.
-3. Commit and push.
-4. Users run `/plugin marketplace update comagency-plugins` and then `/plugin install <name>@comagency-plugins`.
+3. Bump the plugin's `version` in `plugin.json` on every user-visible change.
+4. Commit and push. Users pick it up with `/plugin marketplace update comagency-plugins`.
+
+## Repository layout
+
+```
+comagency-plugins/
+├── .claude-plugin/
+│   └── marketplace.json    # Lists published plugins
+├── plugins/
+│   └── linkedin-writer/
+│       ├── .claude-plugin/plugin.json
+│       ├── agents/
+│       └── README.md
+└── README.md
+```

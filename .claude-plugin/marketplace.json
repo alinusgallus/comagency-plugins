@@ -1,0 +1,13 @@
+{
+  "name": "comagency-plugins",
+  "owner": {
+    "name": "Alain Gallus"
+  },
+  "plugins": [
+    {
+      "name": "linkedin-writer",
+      "source": "./plugins/linkedin-writer",
+      "description": "Conversational LinkedIn post generator. Setup agent establishes brand context and reusable post-type presets from your own materials. Writer agent produces on-brand posts from a short brief."
+    }
+  ]
+}

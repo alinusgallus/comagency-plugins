@@ -71,6 +71,7 @@ Invoke the writer agent. Give it a one- or two-sentence brief. It picks a matchi
 
 - Most days: `writer` with a brief.
 - New type of post (rare): `setup` to create a new preset first, then `writer`.
+- Tweak an existing type (add examples, switch framework, rename): run `setup` and tell it you want to edit an existing type — it will preserve the example corpus.
 - Brand evolves: delete or edit `brand-context/SKILL.md` and `tone-format-guardrails/SKILL.md` and re-run `setup`.
 
 ## Concepts

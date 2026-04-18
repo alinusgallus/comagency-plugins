@@ -1,6 +1,6 @@
 {
   "name": "linkedin-writer",
-  "description": "Conversational LinkedIn post generator. The setup agent establishes brand context and reusable post-type presets from the user's own materials. The writer agent then produces on-brand posts from a short brief.",
-  "version": "0.1.0",
+  "description": "Conversational LinkedIn post generator. Run the setup agent first to establish brand context and post-type presets; then use the writer agent to produce on-brand posts from a short brief.",
+  "version": "0.2.0",
   "license": "MIT"
 }

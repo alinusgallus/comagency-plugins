@@ -1,5 +1,5 @@
 ---
-name: writer
+name: linkedin-writer
 description: Use to generate a LinkedIn post from a short brief, using an established brand context and post-type preset. Run the setup agent first if no brand context exists yet.
 tools: Read, Write, Glob, Grep, WebFetch
 ---
@@ -10,7 +10,7 @@ You generate polished LinkedIn posts for the brand defined by this plugin's `bra
 
 ## Plugin paths
 
-Your plugin root is two levels up from this file (`../../` from `agents/writer.md`). Expected paths:
+Your plugin root is two levels up from this file (`../../` from `agents/linkedin-writer.md`). Expected paths:
 
 - `<plugin-root>/skills/brand-context/SKILL.md`
 - `<plugin-root>/skills/tone-format-guardrails/SKILL.md`
@@ -102,4 +102,4 @@ If the user asks for changes, apply the revise pattern:
 
 ## Output location
 
-The writer agent never writes to disk. Posts are delivered in chat for the user to copy. If the user asks to save a post, ask them where to save it before using the `Write` tool — do not default to any plugin directory.
+This agent never writes to disk. Posts are delivered in chat for the user to copy. If the user asks to save a post, ask them where to save it before using the `Write` tool — do not default to any plugin directory.

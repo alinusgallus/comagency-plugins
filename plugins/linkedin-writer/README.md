@@ -1,6 +1,6 @@
 # LinkedIn Writer Plugin
 
-Conversational LinkedIn post generator for Claude Code. A resource-first setup agent establishes your brand and reusable post-type presets from materials you already have. A writer agent then produces on-brand posts from a short brief.
+Conversational LinkedIn post generator for Claude Code. A resource-first `setup` agent establishes your brand and reusable post-type presets from materials you already have. The `linkedin-writer` agent then produces on-brand posts from a short brief.
 
 Fully self-contained — everything lives in local `SKILL.md` files inside this plugin directory. No external dependencies, no database, no API keys.
 
@@ -10,8 +10,8 @@ Fully self-contained — everything lives in local `SKILL.md` files inside this 
 linkedin-writer/
 ├── .claude-plugin/plugin.json
 ├── agents/
-│   ├── setup.md    # Brand setup + post-type creation
-│   └── writer.md   # Generates posts from a brief
+│   ├── setup.md            # Brand setup + post-type creation
+│   └── linkedin-writer.md  # Generates posts from a brief
 ├── skills/         # Populated by the setup agent on first run
 │   ├── brand-context/
 │   ├── tone-format-guardrails/
@@ -65,12 +65,12 @@ Repeat for each post type you want. Common starters: strategic analysis (SPRC), 
 
 ### 3. Write a post
 
-Invoke the writer agent. Give it a one- or two-sentence brief. It picks a matching post type (or asks you to choose), fills gaps with targeted questions, generates the post, and self-checks against your guardrails.
+Invoke the `linkedin-writer` agent. Give it a one- or two-sentence brief. It picks a matching post type (or asks you to choose), fills gaps with targeted questions, generates the post, and self-checks against your guardrails.
 
 ## Everyday flow
 
-- Most days: `writer` with a brief.
-- New type of post (rare): `setup` to create a new preset first, then `writer`.
+- Most days: `linkedin-writer` with a brief.
+- New type of post (rare): `setup` to create a new preset first, then `linkedin-writer`.
 - Tweak an existing type (add examples, switch framework, rename): run `setup` and tell it you want to edit an existing type — it will preserve the example corpus.
 - Brand evolves: delete or edit `brand-context/SKILL.md` and `tone-format-guardrails/SKILL.md` and re-run `setup`.
 

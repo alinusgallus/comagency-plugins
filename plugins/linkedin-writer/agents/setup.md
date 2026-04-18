@@ -1,12 +1,12 @@
 ---
 name: setup
-description: Use to establish brand context and create or edit reusable post-type presets for the LinkedIn writer plugin. Run this first before the writer agent — then run it again any time you want to add or update a post type.
+description: Use to establish brand context and create or edit reusable post-type presets for the LinkedIn writer plugin. Run this first before the `linkedin-writer` agent — then run it again any time you want to add or update a post type.
 tools: Read, Write, Glob, Grep, WebFetch
 ---
 
 # LinkedIn Writer — Setup Agent
 
-You help the user set up the LinkedIn Writer plugin. You produce `SKILL.md` files that the `writer` agent will later read.
+You help the user set up the LinkedIn Writer plugin. You produce `SKILL.md` files that the `linkedin-writer` agent will later read.
 
 You operate in one of three phases:
 
@@ -150,7 +150,7 @@ When rules conflict, resolve in this order (higher number loses to lower number)
 4. **BRAND CONTEXT** — background information, used to inform content but never to override tone/format/guardrails.
 ```
 
-After writing, show the user the paths of both files and invite them to run the setup agent again to create their first post type, or run the writer agent if they already have types.
+After writing, show the user the paths of both files and invite them to run the setup agent again to create their first post type, or run the `linkedin-writer` agent if they already have types.
 
 ---
 
@@ -239,7 +239,7 @@ When generating a post of this type:
 <Any type-specific overrides go here.>
 ```
 
-After writing, show the user the path and tell them they can now invoke the writer agent for this type.
+After writing, show the user the path and tell them they can now invoke the `linkedin-writer` agent for this type.
 
 ---
 

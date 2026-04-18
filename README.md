@@ -6,7 +6,7 @@ A Claude Code plugin marketplace for content-agency workflows.
 
 | Plugin | Description |
 |--------|-------------|
-| [`linkedin-writer`](plugins/linkedin-writer/) | Conversational LinkedIn post generator. Setup agent establishes brand context and reusable post-type presets from your own materials; writer agent produces on-brand posts from a short brief. |
+| [`linkedin-writer`](plugins/linkedin-writer/) | Conversational LinkedIn post generator. The `setup` agent establishes brand context and reusable post-type presets from your own materials; the `linkedin-writer` agent produces on-brand posts from a short brief. |
 
 ## Install
 

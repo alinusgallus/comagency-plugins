@@ -2,12 +2,12 @@
 
 Conversational LinkedIn post generator for Claude Code. A resource-first setup agent establishes your brand and reusable post-type presets from materials you already have. A writer agent then produces on-brand posts from a short brief.
 
-This plugin is a standalone chat alternative to the ComAgency web form. It writes no data to the ComAgency database — everything lives in local `SKILL.md` files inside this directory.
+Fully self-contained — everything lives in local `SKILL.md` files inside this plugin directory. No external dependencies, no database, no API keys.
 
 ## What's inside
 
 ```
-skills/linkedin-writer/
+linkedin-writer/
 ├── .claude-plugin/plugin.json
 ├── agents/
 │   ├── setup.md    # Brand setup + post-type creation
@@ -23,10 +23,17 @@ The `skills/` subdirectory starts empty. The setup agent writes into it based on
 
 ## Install
 
-From the ComAgency repo root:
+Install via the marketplace (recommended):
+
+```
+/plugin marketplace add <owner>/comagency-plugins
+/plugin install linkedin-writer@comagency-plugins
+```
+
+Or mount the plugin directory directly for local development:
 
 ```bash
-claude --plugin-dir ./skills/linkedin-writer
+claude --plugin-dir /path/to/linkedin-writer
 ```
 
 Run `/reload-plugins` inside Claude Code after editing any plugin file.
@@ -66,14 +73,20 @@ Invoke the writer agent. Give it a one- or two-sentence brief. It picks a matchi
 - New type of post (rare): `setup` to create a new preset first, then `writer`.
 - Brand evolves: delete or edit `brand-context/SKILL.md` and `tone-format-guardrails/SKILL.md` and re-run `setup`.
 
-## Relationship to ComAgency
+## Concepts
 
-This plugin mirrors the prompt-assembly logic of ComAgency's content generator (`flask_app/agents/content_generator.py`) — same priority hierarchy (Tone > Format > Guardrails > Brand), same framework list (from `flask_app/config/post-frameworks.json`), same structural split between brand-level and type-level inputs.
+**Priority hierarchy.** When rules conflict, the writer resolves them in this order: **Tone > Format > Guardrails > Brand**. Voice and personality always win; brand context is background information and never overrides tone.
 
-It does not read from the ComAgency database and does not push posts back to it. If you want a draft to end up in the ComAgency pipeline, copy the output into the web form — or use the existing `comagency-content-ideation` skill, which pushes ideas via MCP.
+**Post type.** A reusable preset bundling a content pillar + a writing framework + 1–3 example posts + optional tone tweaks. Post types are plugin-local — you create whichever ones make sense for your brand.
+
+**Frameworks.** Four built-in writing frameworks are offered during post-type setup:
+- `AIDPA` — Attention / Interest / Desire / Proof / Action. For announcements, launches, conversion.
+- `BAB` — Before / After / Bridge. For transformation stories, case studies.
+- `SPRC` — Situation / Problem / Resolution / Conclusion. For analysis, thought leadership.
+- `PACSO` — Problem / Aggravate / Consequence / Solution / Outcome. For pain-point posts, alerts.
 
 ## Notes
 
-- The plugin is brand-agnostic. The setup agent asks about your brand rather than hardcoding Colette Consulting. You can use it for any company.
-- "Post type" is a plugin-only concept. ComAgency has no equivalent entity; the closest approximation there is a (pillar, framework) pair.
+- The plugin is brand-agnostic. The setup agent asks about your brand rather than hardcoding anything. You can use it for any company.
 - All files are plain markdown. Edit them directly if you want to tweak behaviour without rerunning setup.
+- Delete a `skills/post-types/<slug>/SKILL.md` to retire a post type. Run setup again to add a new one.

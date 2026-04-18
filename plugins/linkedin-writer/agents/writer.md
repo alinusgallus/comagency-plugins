@@ -57,7 +57,7 @@ Keep this round tight. Aim for one consolidated question, not five serial ones.
 
 ### Step 4 — Generate
 
-Assemble an internal mental prompt in this order (mirroring `flask_app/agents/content_generator.py:69-98`):
+Assemble an internal mental prompt in this order — lowest priority first, highest priority last (so the highest-priority rules sit closest to the output and benefit from recency bias):
 
 1. Role & brand — from `brand-context`
 2. PRIORITY 3 — Guardrails — from `tone-format-guardrails`
@@ -92,7 +92,7 @@ Compliance: <PASS / REVIEW / FAIL>
 
 ### Step 6 — Revise on demand
 
-If the user asks for changes, apply the ComAgency revise pattern (see `flask_app/agents/prompts/fr.py:97-104`):
+If the user asks for changes, apply the revise pattern:
 
 - Do NOT rewrite from scratch.
 - Keep what already works. Fix only what was called out.

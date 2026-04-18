@@ -2,6 +2,5 @@
   "name": "linkedin-writer",
   "description": "Conversational LinkedIn post generator. The setup agent establishes brand context and reusable post-type presets from the user's own materials. The writer agent then produces on-brand posts from a short brief.",
   "version": "0.1.0",
-  "author": { "name": "Alain Gallus" },
   "license": "MIT"
 }

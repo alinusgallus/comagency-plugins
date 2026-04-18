@@ -31,10 +31,9 @@ In every phase, *before asking open questions*, ask the user for supporting mate
 
 Acceptable resources:
 
-- **Local files** — tone-of-voice docs, brand decks, past-post exports. Read with the `Read` tool.
+- **Local files** — tone-of-voice docs, brand decks, past-post exports, existing brand config from another system. Read with the `Read` tool.
 - **URLs** — company website, about page, published posts. Fetch with `WebFetch`.
 - **Pasted text** — the user drops examples, mission statements, audience descriptions directly in chat.
-- **Existing ComAgency config** — if the user points you to `flask_app/config/linkedin-writer/*.md` or similar, read those as seed material. Treat them as a starting point to adapt, not as ground truth — the user is setting up their own brand which may differ.
 - **LinkedIn profile URLs** — if the user provides one, fetch to pull recent posts as examples.
 
 After ingesting, **summarise back what you inferred and ask the user to confirm or correct**. For example: "From your tone doc I'm seeing: register 3/5, plural 'nous' only, no first-person, hooks as a strategic question or a surprising statistic — correct?". Then ask narrow follow-up questions only for gaps.
@@ -77,11 +76,11 @@ From the resources (and augmented by targeted questions for gaps), establish:
 - `tone` — tone adjustment specific to this pillar (can be empty if no variation)
 - `priority` — `high`, `medium`, or `low`
 
-**Tone of voice** — identity/voice/register, forbidden phrases, preferred constructions, hook formats, closure patterns. Mirror the style of the reference doc at `flask_app/config/linkedin-writer/tone-of-voice.md` if the user wants an example structure.
+**Tone of voice** — identity/voice/register, forbidden phrases, preferred constructions, hook formats, closure patterns.
 
-**Format rules** — word-count range, hook rules, hashtag count, emoji rules, line-break rules. Reference: `flask_app/config/linkedin-writer/format-guidelines.md`. Sensible default for LinkedIn if the user has no rules: 150–180 words, 2 thematic hashtags, 0–3 emojis, hook in 2–3 lines without emoji on the first line.
+**Format rules** — word-count range, hook rules, hashtag count, emoji rules, line-break rules. Sensible default for LinkedIn if the user has no rules: 150–180 words, 2 thematic hashtags, 0–3 emojis, hook in 2–3 lines without emoji on the first line.
 
-**Guardrails** — do/don't rules plus a verdict scheme. Reference: `flask_app/config/linkedin-writer/guardrails.md`. Sensible default verdict scheme: `PASS` (0 fails, 0–2 warns), `REVIEW` (0 fails + 3+ warns, or 1 minor fail), `FAIL` (2+ fails or 1 critical fail).
+**Guardrails** — do/don't rules plus a verdict scheme. Sensible default verdict scheme: `PASS` (0 fails, 0–2 warns), `REVIEW` (0 fails + 3+ warns, or 1 minor fail), `FAIL` (2+ fails or 1 critical fail).
 
 ### Step 3 — Write two files
 
@@ -120,7 +119,7 @@ Tone: <tone>
 
 **File 2 — `<plugin-root>/skills/tone-format-guardrails/SKILL.md`:**
 
-Mirror the system-prompt section order used by ComAgency (see `flask_app/agents/content_generator.py:69-76`): **lowest priority first, highest priority last**, followed by the explicit priority-hierarchy block.
+Order the sections **lowest priority first, highest priority last**, followed by the explicit priority-hierarchy block. Putting the highest-priority rules last leverages recency bias — the model weights them more heavily at generation time.
 
 ```markdown
 ---
@@ -180,8 +179,6 @@ From the examples (if any) and/or the user's description, propose:
   - `SPRC` — Situation / Problème / Résolution / Conclusion. For analysis, thought leadership.
   - `PACSO` — Problème / Aggraver / Conséquence / Solution / Outcome. For pain-point posts, alerts.
   - Or `none` if no framework fits.
-
-Reference: `flask_app/config/post-frameworks.json` has the canonical definitions with `letter`, `name`, `description` for each step.
 
 ### Step 3 — Confirm and fill gaps
 

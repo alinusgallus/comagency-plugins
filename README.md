@@ -24,14 +24,14 @@ Replace `<owner>` with the GitHub owner/organisation you push this repo under. F
 From any directory:
 
 ```
-/plugin marketplace add /Users/alaingall/Dev/comagency-plugins
+/plugin marketplace add <path-to>/comagency-plugins
 /plugin install linkedin-writer@comagency-plugins
 ```
 
 Or mount the plugin directly without going through the marketplace layer:
 
 ```bash
-claude --plugin-dir /Users/alaingall/Dev/comagency-plugins/plugins/linkedin-writer
+claude --plugin-dir <path-to>/comagency-plugins/plugins/linkedin-writer
 ```
 
 ## Update a plugin

@@ -1,7 +1,7 @@
 {
   "name": "comagency-plugins",
   "owner": {
-    "name": "Alain Gallus"
+    "name": "comagency-plugins"
   },
   "plugins": [
     {
